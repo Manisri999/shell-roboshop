@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+USERID=$(id -u)
+LOGS_FOLDER="/var/log/shell-roboshop"
+LOGS_FILE="$LOGS_FOLDER/$0.log"
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
+N="\e[0m"
+
+
+if [ $USERID -ne 0 ]; then
+    echo -e "$R You must be root to run this script."
+    exit 1
+fi
+
+mkdir -p $LOGS_FOLDER
+
+VALIDATE() {
+
+    if [ $1 -ne 0 ]; then
+        echo -e "$2 installation $Rfailed." | tee -a $LOGS_FILE
+        exit 1
+    else
+        echo -e "$2 installed $Ysuccessfully." | tee -a $LOGS_FILE
+    fi
+}
+
+cp mongo.repo /etc/yum.repos.d/mongo.repo
+VALIDATE $? "Copying mongo.repo file"
+
+dnf install mongodb-org -y 
+VALIDATE $? "Installing mongodb-server"
+
+systemctl enable mongod 
+VALIDATE $? "Enabling mongodb-server"
+
+systemctl start mongod 
+VALIDATE $? "Starting mongodb-server"
+
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
+VALIDATE $? "Allowing remote connections to mongodb-server"
+
+systemctl restart mongod
+VALIDATE $? "Restarting mongodb-server"
+
+
