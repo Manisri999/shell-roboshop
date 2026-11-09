@@ -20,10 +20,10 @@ mkdir -p $LOGS_FOLDER
 VALIDATE() {
 
     if [ $1 -ne 0 ]; then
-        echo -e "$2 installation $Rfailed." | tee -a $LOGS_FILE
+        echo -e "$2 installation $R failed." | tee -a $LOGS_FILE
         exit 1
     else
-        echo -e "$2 installed $Ysuccessfully." | tee -a $LOGS_FILE
+        echo -e "$2 installed $G successfully." | tee -a $LOGS_FILE
     fi
 }
 
