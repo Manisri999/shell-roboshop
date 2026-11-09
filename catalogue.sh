@@ -74,14 +74,14 @@ systemctl start catalogue
 VALIDATE $? "Starting AND enabling catalogue service"
 
 
-cp $SCRIPT_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Copying mongodb.repo file"
 
 dnf install mongodb-mongosh -y &>>$LOGS_FILE
 VALIDATE $? "Installing mongodb-mongosh"
 
 INDEX=$(mongosh --host $MONGODB_HOST --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
-if [ $INDEX -eq -1 ]; then
+if [ $INDEX -le 0 ]; then
     mongosh --host $MONGODB_HOST </app/db/master-data.js
     VALIDATE $? "Loading catalogue schema"
 else
