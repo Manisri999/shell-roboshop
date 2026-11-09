@@ -9,6 +9,7 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 SCRIPT_DIR=$(pwd)
+MONGODB_HOST=mongodb.daws88s.online
 
 
 if [ $USERID -ne 0 ]; then
@@ -73,6 +74,12 @@ systemctl start catalogue
 VALIDATE $? "Starting AND enabling catalogue service"
 
 
+cp $SCRIPT_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo
+VALIDATE $? "Copying mongodb.repo file"
 
+dnf install mongodb-mongosh -y &>>$LOGS_FILE
+VALIDATE $? "Installing mongodb-mongosh"
+
+mongosh --host $MONGODB_HOST </app/db/master-data.js
 
 
