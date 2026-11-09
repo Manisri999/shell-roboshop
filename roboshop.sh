@@ -6,10 +6,10 @@ AMI_ID="ami-0055977a6e828a4f4"
 for instance in $@
 do
 
-    INSTANCE_ID=$( aws ec2 run-instances 
-    --image-id $AMI_ID \
+    INSTANCE_ID=$( aws ec2 run-instances \
+    --image-id "$AMI_ID" \
     --instance-type "t3.micro" \
-    --security-group $SG_ID \
+    --security-group "$SG_ID" \
     --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
     --query 'Instances[0].InstanceId' \
     --output text )
@@ -30,6 +30,6 @@ do
         )
     fi
 
-    eho "IP Adress of $instance is $IP"
+    echo "IP Address of $instance is $IP"
 
 done
