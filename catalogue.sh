@@ -80,6 +80,8 @@ VALIDATE $? "Copying mongodb.repo file"
 dnf install mongodb-mongosh -y &>>$LOGS_FILE
 VALIDATE $? "Installing mongodb-mongosh"
 
+mongosh --host $MONGODB_HOST --quiet --eval 'db.getMongo().getDBNames().indexOf("mydb")'
+
 mongosh --host $MONGODB_HOST </app/db/master-data.js
 
 
