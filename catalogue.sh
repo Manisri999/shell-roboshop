@@ -80,8 +80,15 @@ VALIDATE $? "Copying mongodb.repo file"
 dnf install mongodb-mongosh -y &>>$LOGS_FILE
 VALIDATE $? "Installing mongodb-mongosh"
 
-mongosh --host $MONGODB_HOST --quiet --eval 'db.getMongo().getDBNames().indexOf("mydb")'
+INDEX=$(mongosh --host $MONGODB_HOST --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
+if [ $INDEX -eq -1 ]; then
+    mongosh --host $MONGODB_HOST </app/db/master-data.js
+    VALIDATE $? "Loading catalogue schema"
+else
+    echo -e "catalogue schema already exists. Skipping schema load... $Y SKIPPING $N"
+fi
 
-mongosh --host $MONGODB_HOST </app/db/master-data.js
+systemctl restart catalogue
+VALIDATE $? "Restarting catalogue service"
 
 
