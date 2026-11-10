@@ -30,17 +30,23 @@ VALIDATE() {
     fi
 }
 
-cp $SCRIPT_DIR/rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo &>>$LOGS_FILE
+
+cp $SCRIPT_DIR/rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
 VALIDATE $? "Adding rabbitmq.repo file"
 
-dnf install rabbitmq-server -y &>>$LOGS_FILE
-VALIDATE $? "Installing rabbitmq-server"
+dnf clean all &>>$LOGS_FILE
+dnf makecache &>>$LOGS_FILE
+VALIDATE $? "Refreshing repository metadata"
+
+dnf install erlang rabbitmq-server -y &>>$LOGS_FILE
+VALIDATE $? "Installing RabbitMQ and Erlang"
 
 systemctl enable rabbitmq-server &>>$LOGS_FILE
+VALIDATE $? "Enabling RabbitMQ"
+
 systemctl start rabbitmq-server
-VALIDATE $? "enable and started rabbitmq-server service"
+VALIDATE $? "Starting RabbitMQ"
 
 rabbitmqctl add_user roboshop roboshop123
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
 VALIDATE $? "Creating rabbitmq user and setting permissions"
-
