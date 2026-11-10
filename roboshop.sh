@@ -2,8 +2,8 @@
 
 SG_ID="sg-03acb919ece3742ee"
 AMI_ID="ami-0055977a6e828a4f4"
-ZONE_ID="Z0481650B5OI6B70XQGX"
-DOMAIN_NAME="daws88s.online"
+ZONE_ID="Z02707973O7P38E8EFCV6"
+DOMAIN_NAME="manisrilabs.online"
 for instance in $@
 do
 
